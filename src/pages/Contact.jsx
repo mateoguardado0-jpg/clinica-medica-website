@@ -1,236 +1,219 @@
-import { useState } from 'react'
-import './Contact.css'
-
-const Contact = () => {
-  const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    telefono: '',
-    asunto: '',
-    mensaje: ''
-  })
-
-  const [errors, setErrors] = useState({})
-  const [submitted, setSubmitted] = useState(false)
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }))
-    }
-  }
-
-  const validate = () => {
-    const newErrors = {}
-
-    if (!formData.nombre.trim()) {
-      newErrors.nombre = 'El nombre es requerido'
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'El email es requerido'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'El email no es válido'
-    }
-
-    if (!formData.telefono.trim()) {
-      newErrors.telefono = 'El teléfono es requerido'
-    }
-
-    if (!formData.asunto.trim()) {
-      newErrors.asunto = 'El asunto es requerido'
-    }
-
-    if (!formData.mensaje.trim()) {
-      newErrors.mensaje = 'El mensaje es requerido'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    
-    if (validate()) {
-      // Here you would typically send the data to a backend
-      console.log('Contact form data:', formData)
-      setSubmitted(true)
-      setTimeout(() => {
-        setFormData({
-          nombre: '',
-          email: '',
-          telefono: '',
-          asunto: '',
-          mensaje: ''
-        })
-        setSubmitted(false)
-      }, 3000)
-    }
-  }
-
-  if (submitted) {
-    return (
-      <div className="contact-page">
-        <div className="container">
-          <div className="success-message">
-            <div className="success-icon">✓</div>
-            <h2>¡Mensaje Enviado!</h2>
-            <p>Hemos recibido tu mensaje. Te contactaremos pronto.</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="contact-page">
-      <section className="page-header">
-        <div className="container">
-          <h1 className="page-title">Contacto</h1>
-          <p className="page-subtitle">
-            Estamos aquí para ayudarte. Contáctanos y te responderemos lo antes posible.
-          </p>
-        </div>
-      </section>
-
-      <section className="contact-section">
-        <div className="container">
-          <div className="contact-content">
-            <div className="contact-info">
-              <h2 className="section-title">Información de Contacto</h2>
-              <div className="info-items">
-                <div className="info-item">
-                  <div className="info-icon">📍</div>
-                  <div className="info-content">
-                    <h3>Dirección</h3>
-                    <p>Av. Principal 123<br />Ciudad, Estado 12345</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">📞</div>
-                  <div className="info-content">
-                    <h3>Teléfono</h3>
-                    <p>+1 (555) 123-4567</p>
-                    <p>+1 (555) 123-4568</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">✉️</div>
-                  <div className="info-content">
-                    <h3>Email</h3>
-                    <p>info@clinicamedica.com</p>
-                    <p>citas@clinicamedica.com</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">🕒</div>
-                  <div className="info-content">
-                    <h3>Horarios</h3>
-                    <p>Lunes - Viernes: 8:00 AM - 6:00 PM</p>
-                    <p>Sábados: 9:00 AM - 2:00 PM</p>
-                    <p>Domingos: Cerrado</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="contact-form-container">
-              <h2 className="section-title">Envíanos un Mensaje</h2>
-              <form onSubmit={handleSubmit} className="contact-form">
-                <div className="form-group">
-                  <label htmlFor="nombre">Nombre Completo *</label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    className={errors.nombre ? 'error' : ''}
-                    placeholder="Tu nombre completo"
-                  />
-                  {errors.nombre && <span className="error-message">{errors.nombre}</span>}
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="email">Email *</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className={errors.email ? 'error' : ''}
-                      placeholder="tu@email.com"
-                    />
-                    {errors.email && <span className="error-message">{errors.email}</span>}
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="telefono">Teléfono *</label>
-                    <input
-                      type="tel"
-                      id="telefono"
-                      name="telefono"
-                      value={formData.telefono}
-                      onChange={handleChange}
-                      className={errors.telefono ? 'error' : ''}
-                      placeholder="+1 (555) 123-4567"
-                    />
-                    {errors.telefono && <span className="error-message">{errors.telefono}</span>}
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="asunto">Asunto *</label>
-                  <input
-                    type="text"
-                    id="asunto"
-                    name="asunto"
-                    value={formData.asunto}
-                    onChange={handleChange}
-                    className={errors.asunto ? 'error' : ''}
-                    placeholder="¿Sobre qué quieres contactarnos?"
-                  />
-                  {errors.asunto && <span className="error-message">{errors.asunto}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="mensaje">Mensaje *</label>
-                  <textarea
-                    id="mensaje"
-                    name="mensaje"
-                    value={formData.mensaje}
-                    onChange={handleChange}
-                    className={errors.mensaje ? 'error' : ''}
-                    placeholder="Escribe tu mensaje aquí..."
-                    rows="6"
-                  />
-                  {errors.mensaje && <span className="error-message">{errors.mensaje}</span>}
-                </div>
-
-                <button type="submit" className="btn btn-primary btn-submit">
-                  Enviar Mensaje
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
+.contact-page {
+  min-height: calc(100vh - 200px);
 }
 
-export default Contact
+.page-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.contact-section {
+  padding: 4rem 0;
+  background: var(--bg-light);
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+.contact-info {
+  background: var(--bg-white);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+}
+
+.info-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.info-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.info-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-light);
+  border-radius: 0.5rem;
+}
+
+.info-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.info-content p {
+  color: var(--text-light);
+  line-height: 1.6;
+  margin: 0.25rem 0;
+}
+
+.contact-form-container {
+  background: var(--bg-white);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.2s;
+  width: 100%;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group input.error,
+.form-group textarea.error {
+  border-color: #ef4444;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: -0.25rem;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.success-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-white);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+  max-width: 600px;
+  margin: 3rem auto;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--secondary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 auto 1.5rem;
+}
+
+.success-message h2 {
+  font-size: 2rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.success-message p {
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  .contact-content {
+    grid-template-columns: 1fr 1.5fr;
+  }
+
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .contact-info,
+  .contact-form-container {
+    padding: 3rem;
+  }
+}
+
+.contact-footer-text {
+  padding: 2rem 0;
+  text-align: center;
+  background: var(--bg-light);
+}
+
+.contact-footer-text p {
+  color: var(--text-light);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.contact-footer-text em {
+  font-style: italic;
+}
 
